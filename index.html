@@ -692,49 +692,95 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    /* Responsividade */
-    @media (max-width: 1024px) {
-      .product {
-        flex: 0 0 calc(20% - 15px);
-      }
-    }
+/* ================== RESPONSIVIDADE MELHORADA ================== */
+
+    /* Dispositivos móveis (até 768px) */
     @media (max-width: 768px) {
-      body {
-        padding-top: 180px;
+      header {
+        padding: 20px 15px;
       }
+
       header h1 {
         font-size: 2.2rem;
       }
+
       header p {
         font-size: 0.8rem;
       }
+
+      nav {
+        gap: 8px;
+      }
+
       nav a {
         font-size: 0.9rem;
-        padding: 6px 12px;
+        padding: 6px 10px;
       }
+
+      /* Ajuste do carrinho */
+      .cart-content {
+        width: 100%;
+        padding: 15px;
+      }
+
+     /* Produtos: 2 por linha no celular */
+      .product {
+        flex: 0 0 calc(48% - 15px);
+        margin-bottom: 10px;
+     }
+
+      /* Oculta setas no celular (ou mantém se quiser) */
+      .arrow {
+        display: none;
+      }
+
+      /* Modal de produto */
+      .modal-content {
+        width: 95%;
+        padding: 15px;
+     }
+
+      .modal-img {
+        height: 220px;
+      }
+
+      /* Carrinho */
+      .cart-item {
+        gap: 8px;
+     }
+
+      .cart-item img {
+       width: 50px;
+       height: 50px;
+      }
+
+      .quantity-value {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Tela muito pequena (celular de ponta) */
+    @media (max-width: 480px) {
+      header h1 {
+       font-size: 2rem;
+      }
+
+      .product {
+       flex: 0 0 calc(90% - 15px);
+       margin: 0 auto 15px;
+      }
+
       .section h2 {
         font-size: 2rem;
       }
-      .product {
-        flex: 0 0 calc(45% - 15px);
-        margin-bottom: 10px;
+
+      .btn-comprar {
+        padding: 10px;
+       font-size: 0.9rem;
       }
-      .arrow {
-        display: flex;
-      }
-      .dots {
-        display: flex;
-      }
-      .cart-content {
-        width: 100%;
-      }
-    }
-    @media (max-width: 480px) {
-      .product {
-        flex: 0 0 calc(90% - 15px);
-      }
-      .product-carousel {
-        gap: 10px;
+
+      .price-pix {
+        font-size: 1rem;
       }
     }
   </style>
