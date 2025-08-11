@@ -1232,6 +1232,43 @@
         padding: 10px 15px;
       }
     }
+    /* ================== TOAST PERSONALIZADO ================== */
+    .toast-custom {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      z-index: 3000;
+     opacity: 0;
+      transition: opacity 0.3s ease;
+      min-width: 280px;
+      text-align: center;
+      animation: slideUp 0.4s forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    .toast-custom.success {
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+    }
+
+    .toast-custom.error {
+      background: linear-gradient(135deg, #f44336, #c62828);
+      color: white;
+    }
+
+    .toast-custom i {
+      margin-right: 8px;
+    }
   </style>
 </head>
 <body>
@@ -1856,11 +1893,20 @@
       updateCart();
     }
 
-    function showToast() {
-      toast.classList.add('show');
+    function showToast(message, type = 'success') {
+      document.querySelectorAll('.toast-custom').forEach(t => t.remove());
+      const toast = document.createElement('div');
+      toast.className = `toast-custom ${type}`;
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        ${message}
+      `;
+      document.body.appendChild(toast);
+  
       setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2000);
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
     }
     // ================== PESQUISA COM SUGESTÕES ==================
     const searchIcon = document.querySelector('.search-icon');
@@ -2028,51 +2074,59 @@
     // ================== CADASTRO ==================
     document.getElementById('register-form').addEventListener('submit', function(e) {
       e.preventDefault();
-
       const nome = this.querySelector('input[placeholder="Nome Completo"]').value.trim();
       const email = this.querySelector('input[type="email"]').value.trim();
       const telefone = this.querySelector('input[placeholder="Telefone (opcional)"]').value.trim();
       const senha = this.querySelector('input[placeholder="Senha"]').value;
 
       if (!nome || !email || !senha) {
-        alert('Preencha nome, email e senha.');
+       showToast('Preencha nome, email e senha.', 'error');
         return;
       }
 
-      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-      if (usuarios.find(u => u.email === email)) {
-        alert('Email já cadastrado!');
-        return;
-      }
-
-      // Simulação de verificação de email
-      alert('Cadastro realizado! Enviamos um email de verificação para ' + email + '.');
-      
-      usuarios.push({ nome, email, telefone, senha });
-      localStorage.setItem('usuarios', JSON.stringify(usuarios));
-      
-      switchAuthTab('login');
+      fetch('https://semcensura-loja.onrender.com', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, telefone, senha })
+      })
+      .then(res => res.json())
+      .then(data => {
+        showToast(data.message, 'success');
+       switchAuthTab('login');
+      })
+      .catch(err => {
+        console.error('Erro no cadastro:', err);
+        showToast('Erro ao cadastrar. Tente novamente.', 'error');
+      });
     });
 
     // ================== LOGIN ==================
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
-
       const email = this.querySelector('input[type="email"]').value.trim();
       const senha = this.querySelector('input[type="password"]').value;
 
-      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-      const user = usuarios.find(u => u.email === email && u.senha === senha);
-
-      if (user) {
-        isLoggedIn = true;
-        currentUser = user;
-        alert('Login realizado com sucesso!');
-        closeAuthModal();
-      } else {
-        alert('Email ou senha inválidos.');
-      }
-    });  
+      fetch('https://semcensura-loja.onrender.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha })
+      })
+     .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          showToast(data.error, 'error');
+        } else {
+          isLoggedIn = true;
+          currentUser = data.user;
+          showToast('Login realizado com sucesso!', 'success');
+          closeAuthModal();
+        }
+      })
+      .catch(err => {
+        console.error('Erro no login:', err);
+        showToast('Erro ao conectar. Tente novamente.', 'error');
+      });
+    });
 
     // ================== FINALIZAR COMPRA ==================
     function handleCheckout() {
@@ -2133,36 +2187,68 @@
     const mp = new MercadoPago(publicKey, { locale: 'pt-BR' });
 
     function openMercadoPagoCheckout() {
-      const preference = {
-        items: cart.map(item => ({
-          title: item.name,
-          quantity: item.quantity,
-          unit_price: item.price
-        })),
-        back_urls: {
-          success: window.location.href,
-          failure: window.location.href,
-          pending: window.location.href
-        },
-        auto_return: 'approved',
-        binary_mode: true
+      if (cart.length === 0) {
+        showToast('Seu carrinho está vazio!');
+        return;
+      }
+
+      // Itens com preço cheio (para cartão)
+      const items = cart.map(item => ({
+        title: item.name,
+        quantity: item.quantity,
+        unit_price: parseFloat(item.price) // preço cheio
+      }));
+
+      // URL de retorno
+      const backUrls = {
+        success: window.location.href,
+        failure: window.location.href,
+        pending: window.location.href
       };
 
-      fetch('/create_preference', {
+      // Preferência com desconto no PIX
+      const preference = {
+        items,
+        back_urls: backUrls,
+        auto_return: 'approved',
+        binary_mode: true,
+        // Regra de desconto para PIX
+        payment_methods: {
+          excluded_payment_types: [
+            { id: 'ticket' },
+            { id: 'bank_transfer' }
+          ],
+          default_payment_method_id: 'pix',
+          installments: 1
+        },
+        // Desconto de 30% no PIX
+        discounts: {
+          rate: 30.00, // 30% de desconto
+          description: 'Desconto de 30% no PIX'
+        },
+        // Mostra o preço com desconto no checkout
+        differential_pricing: {
+         id: 12345678 // ID da regra de preço diferenciado (opcional)
+        }
+      };
+
+      // Envia para o backend
+      fetch('https://semcensura-loja.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(preference)
       })
       .then(res => res.json())
       .then(data => {
+        // Abre o checkout
         const checkout = mp.checkout({
           preference: { id: data.id },
-          render: { container: '.cart-footer', label: 'Pagar' }
+          render: { container: '.cart-footer', label: 'Pagar com Mercado Pago' }
         });
       })
       .catch(err => {
-        console.error('Erro ao processar pagamento:', err);
-        alert('Erro ao processar pagamento. Tente novamente.');
+        console.error('Erro ao criar preferência:', err);
+        showToast('Erro ao processar pagamento. Tente novamente.');
       });
     }
 
