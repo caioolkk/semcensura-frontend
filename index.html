@@ -8,6 +8,30 @@
   <script src="https://sdk.mercadopago.com/js/v2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+    /* ================== CAMPO DE CÓDIGO DE INDICAÇÃO (PROFISSIONAL) ================== */
+    .contact-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-input::placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
+
+    .contact-input:focus {
+      outline: none;
+      border-color: #e91e63;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+    }
     /* ================== BARRA DE PESQUISA ================== */
     .search-suggestions {
       position: absolute;
@@ -46,7 +70,7 @@
       border-radius: 6px;
     }
     .search-container {
-      position: absolute;
+      position: fixed;
       top: 35px;
       right: 190px;
       cursor: pointer;
@@ -692,6 +716,59 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    /* ================== CHECKBOX PERSONALIZADO (Entrega Sigilosa) ================== */
+    .custom-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 15px;
+    }
+
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .custom-checkbox span {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      background-color: #f1f1f1;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .custom-checkbox span::after {
+      content: '✔';
+      position: absolute;
+      opacity: 0;
+      color: white;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-weight: bold;
+    }
+
+    .custom-checkbox input:checked + span {
+      background-color: #e91e63;
+      border-color: #c2185b;
+    }
+
+    .custom-checkbox input:checked + span::after {
+      opacity: 1;
+    }
+
+    .custom-checkbox:hover span {
+      border-color: #e91e63;
+    }
     /* ================== RESET BÁSICO ================== */
     * {
     margin: 0;
@@ -758,7 +835,7 @@
 
     /* ================== ÍCONES (CADASTRO E CARRINHO) ================== */
     .auth-container {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 80px;
       display: flex;
@@ -800,7 +877,7 @@
     }
 
     .cart-icon {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 30px;
       font-size: 1.8rem;
@@ -957,74 +1034,261 @@
     .arrow.right {
       right: 10px;
     }
+    /* ================== CONTROLE DE LARGURA MÍNIMA ================== */
+    body {
+      min-width: 420px;
+      overflow-x: hidden;
+    }
 
-    /* Responsividade mínima */
-    @media (max-width: 768px) {
-      .product {
-        min-width: 160px;
-        max-width: 160px;
-        width: 160px;
+    /* ================== HAMBURGER MENU ================== */
+    .hamburger {
+      display: none;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.8rem;
+      color: white;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* ================== MENU MOBILE ================== */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 280px;
+      height: 100%;
+      background-color: #5d3a5a;
+      color: white;
+      z-index: 1500;
+      padding: 70px 20px 20px;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+    }
+
+    .mobile-menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 10px;
+    }
+
+    .mobile-menu-header h3 {
+      font-size: 1.5rem;
+      color: #ff4081;
+    }
+
+    .mobile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 15px;
+      margin: 8px 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .mobile-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-menu-item i {
+      font-size: 1.4rem;
+      color: #ff4081;
+    }
+
+    .mobile-menu-item span {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    /* ================== CARRINHO (sempre visível) ================== */
+    .cart-icon {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+      transition: color 0.3s;
+      z-index: 1001;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ff4081;
+      color: white;
+      font-size: 0.75rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ================== RESPONSIVIDADE: 755px para baixo ================== */
+    @media (max-width: 755px) {
+      .hamburger {
+        display: block;
       }
 
-      .product img {
-        height: 140px;
+      /* Esconde ícones duplicados */
+      .auth-container,
+      .search-container {
+        display: none !important;
       }
 
-      .section h2 {
-        font-size: 2rem;
-      }
-
+      /* Ajusta header */
       header h1 {
         font-size: 2rem;
       }
+
+      header p {
+        font-size: 0.8rem;
+      }
+
+      nav {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      nav a {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+      }
     }
 
+    /* ================== LARGURA MÍNIMA DO SITE ================== */
+    @media (max-width: 420px) {
+      body {
+        zoom: 0.9;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: 0.75rem;
+      }
+
+      nav a {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+      }
+    }
+    /* ================== ÍCONES EM TELAS GRANDES ================== */
+    .desktop-icons {
+      position: absolute;
+      top: 20px;
+      right: 80px;
+      display: flex;
+      gap: 45px;
+      align-items: center;
+    }
+
+    @media (max-width: 755px) {
+      .desktop-icons {
+        display: none;
+      }
+    }
+    /* ================== RODAPÉ COMPACTO ================== */
+    footer {
+      background-color: #5d3a5a;
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      margin-top: 40px;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 100%;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    footer a {
+      color: #ff4081;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Em telas pequenas */
     @media (max-width: 480px) {
-      .product {
-        min-width: 140px;
-        max-width: 140px;
-        width: 140px;
-      }
-
-      .product img {
-        height: 120px;
-      }
-
-      .btn-comprar {
-        padding: 8px 12px;
-        font-size: 0.85rem;
+      footer {
+        font-size: 0.8rem;
+        padding: 10px 15px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- ================== CABEÇALHO COM CARRINHO E CADASTRO ================ -->
-  <header id="header">
-    <h1>Sem Censura</h1>
-    <p>Produtos Sensuais com Discrição e Qualidade</p>
-    <!-- Ícone de Login/Cadastro -->
-    <div class="auth-container" onclick="openAuthModal()">
-      <div class="auth-icon-circle">
-        <i class="fas fa-user"></i>
+    <header id="header">
+      <h1>Sem Censura</h1>
+      <p>Produtos Sensuais com Discrição e Qualidade</p>
+
+      <!-- CARRINHO (sempre visível no canto direito) -->
+      <div class="cart-icon" onclick="toggleCart()">
+        🛒
+        <span class="cart-count" id="cart-count">0</span>
       </div>
-      <span class="auth-label">Login/Cadastro</span>
+
+      <!-- MENU HAMBURGER (só aparece em telas pequenas) -->
+      <div class="hamburger" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+
+      <!-- CATEGORIAS (sempre visíveis) -->
+      <nav>
+        <a href="#paraela" class="nav-link">Para Ela</a>
+        <a href="#paraele" class="nav-link">Para Ele</a>
+        <a href="#casal" class="nav-link">Acessórios & Jogos</a>
+      </nav>
+      <!-- ÍCONES EM TELAS GRANDES (só aparecem acima de 755px) -->
+    <div class="desktop-icons">
+      <div class="search-container" onclick="toggleSearch()">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+      <div class="auth-container" onclick="openAuthModal()">
+       <div class="auth-icon-circle">
+          <i class="fas fa-user"></i>
+       </div>
+        <span class="auth-label">Login/Cadastro</span>
+      </div>
     </div>
-    <div class="search-container">
-      <i class="fas fa-search search-icon" onclick="toggleSearchBar()"></i>
+    </header>
+    <!-- MENU MOBILE (só aparece em telas pequenas) -->
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <h3>Opções</h3>
+        <i class="fas fa-times" onclick="toggleMenu()"></i>
+      </div>
+
+      <!-- LUPA -->
+      <div class="mobile-menu-item" onclick="toggleSearchBar(); toggleMenu();">
+        <i class="fas fa-search"></i>
+        <span>Pesquisar</span>
+      </div>
+
+      <!-- CADASTRO -->
+      <div class="mobile-menu-item" onclick="openAuthModal(); toggleMenu();">
+        <i class="fas fa-user"></i>
+        <span>Login/Cadastro</span>
+      </div>
     </div>
-    <!-- Ícone do carrinho -->
-    <div class="cart-icon" onclick="toggleCart()">
-      🛒
-      <span class="cart-count" id="cart-count">0</span>
-    </div>
-    <!-- Menu de categorias -->
-    <nav>
-      <a href="#paraela" class="nav-link">Para Ela</a>
-      <a href="#paraele" class="nav-link">Para Ele</a>
-      <a href="#casal" class="nav-link">Acessórios & Jogos</a>
-    </nav>
-  </header>
     
     <!-- ================== BARRA DE PESQUISA (SUGESTÕES) ================== -->
     <div class="search-bar" id="search-bar" style="display: none;">
@@ -1303,11 +1567,11 @@
           <div class="promo-badge">30% OFF no PIX</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Vibration Power Doce De Leite" data-price="130.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Vibration Power Doce De Leite" data-price="175.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_5765cae5-0bf2-42d7-9259-535a0e8dadc2.jpg.jpeg" alt="Vibration Power Doce De Leite">
           <h3>Vibration Power Doce De Leite</h3>
-          <div class="price-pix">R$ 100,00</div>
-          <div class="price-original">De R$ 130,00</div>
+          <div class="price-pix">R$ 135,00</div>
+          <div class="price-original">De R$ 175,00</div>
           <div class="promo-badge">30% OFF no PIX</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
@@ -1456,7 +1720,7 @@
           <div class="promo-badge">30% OFF no PIX</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Algemas Metal" data-price="45500" onclick="showProductDescription(this)">
+        <div class="product" data-name="Algemas Metal" data-price="45.50" onclick="showProductDescription(this)">
           <img src="https://static.cdnlive.com.br/uploads/487/unidade/16964540694841_zoom.jpg" alt="Algemas Metal">
           <h3>Algemas Metal</h3>
           <div class="price-pix">R$ 35,00</div>
@@ -1611,6 +1875,7 @@
     });
 
     function closeSearchBar() {
+      document.getElementById('search-bar').style.display = 'none';
       searchBar.style.display = 'none';
       searchInput.value = '';
      searchSuggestions.style.display = 'none';
@@ -1958,6 +2223,39 @@
 
     // INICIALIZAR
     updateCart();
+    // ================== MENU HAMBURGER ==================
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu && menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'block';
+      }
+    }
+
+    // Fecha o menu ao clicar fora
+    window.onclick = function(event) {
+      const menu = document.getElementById('mobile-menu');
+      const hamburger = document.querySelector('.hamburger');
+      if (menu && menu.style.display === 'block' && !menu.contains(event.target) && !hamburger?.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    }
+    // Abre a barra de pesquisa
+    function toggleSearchBar() {
+      const searchInput = document.getElementById('search-input');
+      const searchSuggestions = document.getElementById('search-suggestions');
+
+      const searchBar = document.getElementById('search-bar');
+      if (searchBar.style.display === 'flex') {
+        searchBar.style.display = 'none';
+        searchInput.value = '';
+        searchSuggestions.innerHTML = '';
+      } else {
+        searchBar.style.display = 'flex';
+        searchInput.focus();
+      }
+    }
   </script>
 </body>
 </html>
