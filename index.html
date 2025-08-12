@@ -2084,7 +2084,7 @@
         return;
       }
 
-      fetch('https://semcensura-loja.onrender.com', {
+      fetch('https://semcensura-loja.onrender.com/confirmar', {
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, email, telefone, senha })
@@ -2106,7 +2106,7 @@
       const email = this.querySelector('input[type="email"]').value.trim();
       const senha = this.querySelector('input[type="password"]').value;
 
-      fetch('https://semcensura-loja.onrender.com', {
+      fetch('https://semcensura-loja.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha })
@@ -2233,7 +2233,7 @@
       };
 
       // Envia para o backend
-      fetch('https://semcensura-loja.onrender.com', {
+      fetch('https://semcensura-loja.onrender.com/create_preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(preference)
