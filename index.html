@@ -2080,19 +2080,19 @@
       const senha = this.querySelector('input[placeholder="Senha"]').value;
 
       if (!nome || !email || !senha) {
-       showToast('Preencha nome, email e senha.', 'error');
+        showToast('Preencha nome, email e senha.', 'error');
         return;
       }
 
-      fetch('https://semcensura-loja.onrender.com/confirmar', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
+      fetch('https://semcensura-loja.onrender.com/register', { // ← CORRIGIDO
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, email, telefone, senha })
       })
       .then(res => res.json())
       .then(data => {
-        showToast(data.message, 'success');
-       switchAuthTab('login');
+        showToast(data.message || data.error, data.message ? 'success' : 'error');
+        if (data.message) switchAuthTab('login');
       })
       .catch(err => {
         console.error('Erro no cadastro:', err);
