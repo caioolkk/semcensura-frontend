@@ -1811,7 +1811,7 @@
       }
 
       updateCart();
-      showToast();
+      showToast(`✅ ${name} adicionado ao carrinho!`, 'success');
     }
 
     function updateCart() {
@@ -2130,36 +2130,49 @@
 
     // ================== FINALIZAR COMPRA ==================
     function handleCheckout() {
-      console.log("handleCheckout chamado. isLoggedIn:", isLoggedIn);
-
+      console.log("handleCheckout chamado. Carrinho:", cart);
+  
       if (cart.length === 0) {
-        alert('Seu carrinho está vazio!');
+        showToast('Seu carrinho está vazio!', 'error');
         return;
       }
 
       if (!isLoggedIn) {
+        showToast('Faça login para finalizar a compra.', 'error');
         openAuthModal();
         return;
       }
 
-      const codigoIndicacao = document.getElementById('codigo-indicacao').value.trim();
+      const items = cart.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: parseFloat(item.price)
+      }));
 
-      const pedido = {
-        usuario: currentUser.email,
-        carrinho: cart,
-        codigoIndicacao: codigoIndicacao,
-        data: new Date().toISOString(),
-        status: 'pendente'
-      };
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      pedidos.push(pedido);
-      localStorage.setItem('pedidos', JSON.stringify(pedidos));
-
-      if (document.getElementById('entrega-sigilosa')?.checked) {
-        document.getElementById('faq-modal').style.display = 'flex';
-      } else {
-        openMercadoPagoCheckout();
-      }
+      // Envia para o backend para criar a preferência
+      fetch('https://semcensura-loja.onrender.com/create_preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items,
+          usuario: currentUser.email
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log('Preferência criada:', data);
+    
+        // ✅ Abre o checkout do Mercado Pago em uma nova aba
+        const url = `https://www.mercadopago.com/mlb/checkout/pay?pref_id=${data.id}`;
+        window.open(url, '_blank');
+      })
+      .catch(err => {
+        console.error('Erro ao processar pagamento:', err);
+        showToast('Erro ao processar pagamento. Tente novamente.', 'error');
+      });
     }
 
     // ================== FAQ MODAL ==================
