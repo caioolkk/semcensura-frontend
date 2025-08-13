@@ -2162,13 +2162,14 @@
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         return res.json();
       })
-      .then(data => {
-        console.log('Preferência criada:', data);
-    
-        // ✅ Abre o checkout do Mercado Pago em uma nova aba
-        const url = `https://www.mercadopago.com/mlb/checkout/pay?pref_id=${data.id}`;
-        window.open(url, '_blank');
-      })
+    .then(data => {
+      console.log('Preferência criada:', data);
+      if (data.init_point) {
+        window.open(data.init_point, '_blank');
+      } else {
+        showToast('Erro: Falha ao gerar pagamento.', 'error');
+      }
+    })
       .catch(err => {
         console.error('Erro ao processar pagamento:', err);
         showToast('Erro ao processar pagamento. Tente novamente.', 'error');
@@ -2201,67 +2202,41 @@
 
     function openMercadoPagoCheckout() {
       if (cart.length === 0) {
-        showToast('Seu carrinho está vazio!');
+        showToast('Seu carrinho está vazio!', 'error');
         return;
       }
 
-      // Itens com preço cheio (para cartão)
       const items = cart.map(item => ({
-        title: item.name,
+        name: item.name,
         quantity: item.quantity,
-        unit_price: parseFloat(item.price) // preço cheio
+        price: parseFloat(item.price)
       }));
-
-      // URL de retorno
-      const backUrls = {
-        success: window.location.href,
-        failure: window.location.href,
-        pending: window.location.href
-      };
-
-      // Preferência com desconto no PIX
-      const preference = {
-        items,
-        back_urls: backUrls,
-        auto_return: 'approved',
-        binary_mode: true,
-        // Regra de desconto para PIX
-        payment_methods: {
-          excluded_payment_types: [
-            { id: 'ticket' },
-            { id: 'bank_transfer' }
-          ],
-          default_payment_method_id: 'pix',
-          installments: 1
-        },
-        // Desconto de 30% no PIX
-        discounts: {
-          rate: 30.00, // 30% de desconto
-          description: 'Desconto de 30% no PIX'
-        },
-        // Mostra o preço com desconto no checkout
-        differential_pricing: {
-         id: 12345678 // ID da regra de preço diferenciado (opcional)
-        }
-      };
 
       // Envia para o backend
       fetch('https://semcensura-loja.onrender.com/create_preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(preference)
+        body: JSON.stringify({
+          items,
+        usuario: currentUser.email
+        })
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
       .then(data => {
-        // Abre o checkout
-        const checkout = mp.checkout({
-          preference: { id: data.id },
-          render: { container: '.cart-footer', label: 'Pagar com Mercado Pago' }
-        });
+        console.log('Preferência criada:', data);
+    
+        // Abre o checkout em nova aba
+        const url = `https://www.mercadopago.com/mlb/checkout/pay?pref_id=${data.id}`;
+        window.open(url, '_blank');
       })
       .catch(err => {
-        console.error('Erro ao criar preferência:', err);
-        showToast('Erro ao processar pagamento. Tente novamente.');
+        console.error('Erro detalhado:', err);
+        showToast('Erro: ' + err.message, 'error');
       });
     }
 
