@@ -1269,6 +1269,58 @@
     .toast-custom i {
       margin-right: 8px;
     }
+    /* ÍCONE FLUTUANTE DO WHATSAPP */
+    .whatsapp-float {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      bottom: 30px;
+      right: 30px;
+      background-color: #25D366;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 30px;
+      line-height: 60px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      background-color: #128C7E;
+    }
+
+    .whatsapp-float i {
+      margin-top: 15px;
+    }
+    /* Dropdown do usuário logado */
+    .auth-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      width: 180px;
+      overflow: hidden;
+      display: none;
+      z-index: 1002;
+    }
+
+    .auth-dropdown a {
+      display: block;
+      padding: 12px 16px;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .auth-dropdown a:hover {
+      background-color: #f5f5f5;
+    }
   </style>
 </head>
 <body>
@@ -1299,11 +1351,11 @@
       <div class="search-container" onclick="toggleSearch()">
         <i class="fas fa-search search-icon"></i>
       </div>
-      <div class="auth-container" onclick="openAuthModal()">
+      <div class="auth-container" id="auth-container" onclick="openAuthModal()">
        <div class="auth-icon-circle">
           <i class="fas fa-user"></i>
        </div>
-        <span class="auth-label">Login/Cadastro</span>
+        <span class="auth-label" id="auth-label">Login/Cadastro</span>
       </div>
     </div>
     </header>
@@ -1323,7 +1375,7 @@
       <!-- CADASTRO -->
       <div class="mobile-menu-item" onclick="openAuthModal(); toggleMenu();">
         <i class="fas fa-user"></i>
-        <span>Login/Cadastro</span>
+        <span id="mobile-auth-label">Login/Cadastro</span>
       </div>
     </div>
     
@@ -1344,9 +1396,13 @@
 
       <!-- LOGIN -->
       <form id="login-form" class="auth-form">
-        <input type="email" placeholder="Email" required>
+       <input type="email" placeholder="Email" required>
         <input type="password" placeholder="Senha" required>
         <button type="submit">Entrar</button>
+        <a href="#" style="font-size: 12px; color: #e91e63; text-align: center; margin-top: 10px;" 
+           onclick="alert('Entre em contato pelo WhatsApp para recuperar sua senha.'); return false;">
+          Esqueci a senha
+        </a>
       </form>
 
       <!-- CADASTRO -->
@@ -1419,197 +1475,197 @@
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
       <div class="product-carousel">
-        <div class="product" data-name="Sugador Clitoriano" data-price="65.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Sugador Clitoriano" data-price="50.00" onclick="showProductDescription(this)">
           <img src="https://cdn.awsli.com.br/600x450/2695/2695451/produto/250358452/sugador-clitoriano-6756-l26t8hp3od.jpg" alt="Sugador Clitoriano">
           <h3>Sugador Clitoriano</h3>
           <div class="price-pix">R$ 50,00</div>
           <div class="price-original">De R$ 65,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Orgastic" data-price="169.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Orgastic" data-price="130.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/41o3jTvnkbL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg" alt="Orgastic">
           <h3>Orgastic</h3>
           <div class="price-pix">R$ 130,00</div>
           <div class="price-original">De R$ 169,29</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Desodorante Soft Love Skin Ice" data-price="19.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Desodorante Soft Love Skin Ice" data-price="15.00" onclick="showProductDescription(this)">
           <img src="https://dcdn-us.mitiendanube.com/stores/006/176/224/products/img_2320-c91a23e7218552649f17465402358679-1024-1024.jpeg" alt="Desodorante Soft Love">
           <h3>Desodorante Soft Love Skin Ice</h3>
           <div class="price-pix">R$ 15,00</div>
           <div class="price-original">De R$ 19,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Perfume Feminino Tutti Fruitt" data-price="26.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Perfume Feminino Tutti Fruitt" data-price="20.00" onclick="showProductDescription(this)">
           <img src="https://cdn.dooca.store/172728/products/5onvemzlpwvqvf0xwlhogwpmbq1mkj8fhcwr_450x600.png?v=1750690827&webp=0" alt="Perfume Feminino">
           <h3>Perfume Feminino Tutti Fruitt</h3>
           <div class="price-pix">R$ 20,00</div>
           <div class="price-original">De R$ 26,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Tu Xera Hidratante Virilha Beijável" data-price="45.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Tu Xera Hidratante Virilha Beijável" data-price="35.00" onclick="showProductDescription(this)">
           <img src="https://a-static.mlcdn.com.br/1500x1500/tu-xera-calda-hidratante-virilha-305ml-loka-sensacao/bocanalingua/2f000d12115e11f0b73442010a480843/e594e44c50aafcc22122a7b1249e7701.jpeg" alt="Tu Xera">
           <h3>Tu Xera Hidratante Virilha Beijável</h3>
           <div class="price-pix">R$ 35,00</div>
           <div class="price-original">De R$ 45,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Vibrador Golfinho Toque Aveludado" data-price="45.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Vibrador Golfinho Toque Aveludado" data-price="35.00" onclick="showProductDescription(this)">
           <img src="https://a-static.mlcdn.com.br/1500x1500/vibrador-golfinho-toque-aveludado-vipmix/lumesexy/da6273c8d08511eda4954201ac185033/b2ca0df2e25d7642e269de1340c87cf6.jpeg" alt="Vibrador Golfinho">
           <h3>Vibrador Golfinho Toque Aveludado</h3>
           <div class="price-pix">R$ 35,00</div>
           <div class="price-original">De R$ 45,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         
           </div>
-        <div class="product" data-name="Vibrador Ponto G Duplo Motor 17cm" data-price="156.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Vibrador Ponto G Duplo Motor 17cm" data-price="120.00" onclick="showProductDescription(this)">
           <img src="https://static.cdnlive.com.br/uploads/487/produto/16995629866012_zoom.jpg" alt="Vibrador Ponto G">
           <h3>Vibrador Ponto G Duplo Motor 17cm</h3>
           <div class="price-pix">R$ 120,00</div>
           <div class="price-original">De R$ 156,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Sabonete Íntimo Aromatizado Uva e Babalou" data-price="15.60" onclick="showProductDescription(this)">
+        <div class="product" data-name="Sabonete Íntimo Aromatizado Uva e Babalou" data-price="12.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_efebbf2a-4690-4762-9b94-7930dc225caf.jpg.jpeg" alt="Sabonete Íntimo Uva e Babalou">
           <h3>Sabonete Íntimo Aromatizado Uva e Babalou</h3>
           <div class="price-pix">R$ 12,00</div>
           <div class="price-original">De R$ 15,60</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Bullet Mini Cápsula" data-price="32.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Bullet Mini Cápsula" data-price="25.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/stores/63666139-3135-5336-a365-623962343464/product_photos/1644701389399.png" alt="Bullet Mini Cápsula">
           <h3>Bullet Mini Cápsula</h3>
           <div class="price-pix">R$ 25,00</div>
           <div class="price-original">De R$ 32,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Bolinhas Tailandesas" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Bolinhas Tailandesas" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/stores/63666139-3135-5336-a365-623962343464/product_photos/1644457394938.png" alt="Bolinhas Tailandesas">
           <h3>Bolinhas Tailandesas</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Cinta P/2 Proteses DP Invertida La Pimienta" data-price="91.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Cinta P/2 Proteses DP Invertida La Pimienta" data-price="70.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/31fyXJcABjL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg" alt="CINTA P/2 PROTESES DP INVERTIDA LA PIMIENTA">
           <h3>CINTA P/2 PROTESES DP INVERTIDA LA PIMIENTA</h3>
           <div class="price-pix">R$ 70,00</div>
           <div class="price-original">De R$ 91,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Cinta Peniana" data-price="78.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Cinta Peniana" data-price="60.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/stores/63666139-3135-5336-a365-623962343464/product_photos/1656434717334.png" alt="Cinta Peniana">
           <h3>Cinta Peniana</h3>
           <div class="price-pix">R$ 60,00</div>
           <div class="price-original">De R$ 78,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Gel Térmico 8ml" data-price="13.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Gel Térmico 8ml" data-price="10.00" onclick="showProductDescription(this)">
           <img src="https://http2.mlstatic.com/D_NQ_NP_803152-MLU74316946914_022024-O.webp" alt="Gel Térmico 8ml">
           <h3>Gel Térmico 8ml</h3>
           <div class="price-pix">R$ 10,00</div>
           <div class="price-original">De R$ 13,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Lubrificante Beijavel Bubbalove Menta" data-price="19.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Lubrificante Beijavel Bubbalove Menta" data-price="15.00" onclick="showProductDescription(this)">
           <img src="https://carrefourbr.vtexassets.com/arquivos/ids/163391978/cb76fe7ceb1041d0a0795ae693ebd9ff.jpg?v=638548330501030000" alt="Lubrificante Beijavel Bubbalove Menta">
           <h3>Lubrificante Beijavel Bubbalove Menta</h3>
           <div class="price-pix">R$ 15,00</div>
           <div class="price-original">De R$ 19,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Plug Anal G" data-price="71.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Plug Anal G" data-price="55.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_e051754c-4604-459f-948e-a9cca531e15b.jpg.jpeg" alt="Plug Anal G">
           <h3>Plug Anal G</h3>
           <div class="price-pix">R$ 55,00</div>
           <div class="price-original">De R$ 71,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Plug Anal M" data-price="65.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Plug Anal M" data-price="50.00" onclick="showProductDescription(this)">
           <img src="https://cdn.awsli.com.br/1388/1388473/produto/2381432075dcfb025c9.jpg" alt="Plug Anal M">
           <h3>Plug Anal M</h3>
           <div class="price-pix">R$ 50,00</div>
           <div class="price-original">De R$ 65,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Plug Anal P" data-price="58.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Plug Anal P" data-price="45.00" onclick="showProductDescription(this)">
           <img src="https://acdn-us.mitiendanube.com/stores/001/532/535/products/copia-de-copia-de-copia-de-copia-de-copia-de-copia-de-copia-de-copia-de-design-sem-nome-21-a31d6f008b0924e7cc16682883752167-1024-1024.png" alt="Plug Anal P">
           <h3>Plug Anal P</h3>
           <div class="price-pix">R$ 45,00</div>
           <div class="price-original">De R$ 58,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Plug Anal PP" data-price="52.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Plug Anal PP" data-price="40.00" onclick="showProductDescription(this)">
           <img src="https://images.tcdn.com.br/img/img_prod/988175/mini_plug_anal_pp_metal_brilhante_6360_2_ff0ceb0c07b97243469ea7f9122e37c0.jpg" alt="Plug Anal PP">
           <h3>Plug Anal PP</h3>
           <div class="price-pix">R$ 40,00</div>
           <div class="price-original">De R$ 52,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Penis Realístico" data-price="65.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Penis Realístico" data-price="50.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_7d12d86f-d8f5-4941-b1c4-2595a36df1e7.jpg.jpeg" alt="Penis Realístico">
           <h3>Pênis Realístico</h3>
           <div class="price-pix">R$ 50,00</div>
           <div class="price-original">De R$ 65,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Protese 16,7 x 3,7cm" data-price="143.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Protese 16,7 x 3,7cm" data-price="110.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/516uW8KmNVL._UF350,350_QL50_.jpg" alt="Protese 16,7 x 3,7cm">
           <h3>Protese 16,7 x 3,7cm</h3>
           <div class="price-pix">R$ 110,00</div>
           <div class="price-original">De R$ 143,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Protese BEGE 17 x 8cm" data-price="169.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Protese BEGE 17 x 8cm" data-price="130.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/41LMrDUCTFL._UF350,350_QL80_.jpg" alt="Protese BEGE 17 x 8cm">
           <h3>Protese BEGE 17 x 8cm</h3>
           <div class="price-pix">R$ 130,00</div>
           <div class="price-original">De R$ 169,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Protese 18,4 x 4,3cm" data-price="195.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Protese 18,4 x 4,3cm" data-price="150.00" onclick="showProductDescription(this)">
           <img src="https://arquivos.facilzap.app.br/produtos/688936eb960a0_sNEQMJ6P.jpg.webp" alt="Protese 18,4 x 4,3cm">
           <h3>Protese 18,4 x 4,3cm</h3>
           <div class="price-pix">R$ 150,00</div>
           <div class="price-original">De R$ 195,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Vibrador Porquinho" data-price="84.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Vibrador Porquinho" data-price="65.00" onclick="showProductDescription(this)">
           <img src="https://acdn-us.mitiendanube.com/stores/001/538/031/products/po-f031bfa338397f71a917119994502538-1024-1024.jpg" alt="Vibrador Porquinho">
           <h3>Vibrador Porquinho</h3>
           <div class="price-pix">R$ 65,00</div>
           <div class="price-original">De R$ 84,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Vibration Power Doce De Leite" data-price="175.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Vibration Power Doce De Leite" data-price="135.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_5765cae5-0bf2-42d7-9259-535a0e8dadc2.jpg.jpeg" alt="Vibration Power Doce De Leite">
           <h3>Vibration Power Doce De Leite</h3>
           <div class="price-pix">R$ 135,00</div>
           <div class="price-original">De R$ 175,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
       </div>
@@ -1625,100 +1681,100 @@
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
       <div class="product-carousel">
-        <div class="product" data-name="Super Love - Potencializador Masculino" data-price="50.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Super Love - Potencializador Masculino" data-price="45.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_4ac33332-41dc-460b-8200-4cdc45a1b260.webp.webp" alt="Potencializador Masculino">
           <h3>Super Love - Potencializador Masculino</h3>
           <div class="price-pix">R$ 45,00</div>
           <div class="price-original">De R$ 71,43</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Anel Peniano Com Vibro" data-price="13.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Anel Peniano Com Vibro" data-price="10.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/stores/63666139-3135-5336-a365-623962343464/product_photos/1644447307667.png" alt="Anel Peniano Com Vibro">
           <h3>Anel Peniano Com Vibro</h3>
           <div class="price-pix">R$ 10,00</div>
           <div class="price-original">De R$ 13,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Anel Peniano Em Silicone" data-price="13.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Anel Peniano Em Silicone" data-price="10.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/stores/63666139-3135-5336-a365-623962343464/product_photos/1644536696004.png" alt="Anel Peniano">
           <h3>Anel Peniano Em Silicone</h3>
           <div class="price-pix">R$ 10,00</div>
           <div class="price-original">De R$ 13,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Masturbador Cyberskin em Formato de Boca - CYBERSKIN" data-price="65.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Masturbador Cyberskin em Formato de Boca - CYBERSKIN" data-price="50.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_4bb9d2cd-7c0b-4bf8-b52a-a390d8ee8f06.jpg.jpeg" alt="Masturbador Cyberskin em Formato de Boca">
           <h3>Masturbador Em Formato De Boca - CYBERSKIN</h3>
           <div class="price-pix">R$ 50,00</div>
           <div class="price-original">De R$ 65,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Pinto Loko" data-price="19.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Pinto Loko" data-price="15.00" onclick="showProductDescription(this)">
           <img src="https://a-static.mlcdn.com.br/800x560/pinto-loko-gel-estimulante-masculino-que-esquenta-15g-hot-flowers-hot-flowers/ph-comercioeconfeccoesltda/a1ce529af4ff11ed98ff4201ac185049/d3ee122410fecb365cfbf2a01eb0d2e6.jpeg" alt="Pinto Loko">
           <h3>Pinto Loko</h3>
           <div class="price-pix">R$ 15,00</div>
           <div class="price-original">De R$ 19,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Egg Masturbador Surfer" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Egg Masturbador Surfer" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://cdn.iset.io/assets/01805/produtos/3879/tenga-ten11.jpg" alt="Egg Masturbador Surfer">
           <h3>Egg Masturbador Surfer</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Egg Masturbador Brush" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Egg Masturbador Brush" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/611EF0ezNAL._UF1000,1000_QL80_.jpg" alt="Egg Masturbador Brush">
           <h3>Egg Masturbador Brush</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Egg Masturbador Spide" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Egg Masturbador Spide" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/51sHsEc-N8L._UF1000,1000_QL80_.jpg" alt="Egg Masturbador Spide">
           <h3>Egg Masturbador Spide</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Egg Masturbador Stronger Shiny" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Egg Masturbador Stronger Shiny" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://m.media-amazon.com/images/I/51D9+9LqHRL.jpg" alt="Egg Masturbador Stronger Shiny">
           <h3>Egg Masturbador Stronger Shiny</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Egg Masturbador Tube" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Egg Masturbador Tube" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://http2.mlstatic.com/D_Q_NP_611945-MLU77748498315_072024-O.webp" alt="Egg Masturbador Tube">
           <h3>Egg Masturbador Tube</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Masturbador Funny Egg" data-price="52.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Masturbador Funny Egg" data-price="40.00" onclick="showProductDescription(this)">
           <img src="https://cdn.awsli.com.br/600x450/2588/2588659/produto/284719544/117589-masturbador-funny-egg-formato-de-vagina-1---lilo-159025-6a91k8c0bz.jpg" alt="Masturbador Funny Egg">
           <h3>Masturbador Funny Egg</h3>
           <div class="price-pix">R$ 40,00</div>
           <div class="price-original">De R$ 52,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Volumão Intensificador De Macho" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Volumão Intensificador De Macho" data-price="30.00" onclick="showProductDescription(this)">
           <img src="https://a-static.mlcdn.com.br/1500x1500/gel-intensificador-de-macho-volumao-25gr-sensacao-de-inchaco-no-orgao-masculino-d-amor/dosedeamor-ltda/hc574/e3bdfe3e90dd80b0a3044752f5a2eff7.jpeg" alt="Volumão Intensificador De Macho">
           <h3>Volumão Intensificador De Macho</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
       </div>
@@ -1733,20 +1789,20 @@
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
       <div class="product-carousel">
-        <div class="product" data-name="Fantasia Vou de Táxi" data-price="78.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Fantasia Vou de Táxi" data-price="60.00" onclick="showProductDescription(this)">
           <img src="https://miess.vteximg.com.br/arquivos/ids/188727/7243PS_1.jpg?v=637194664383370000" alt="Fantasia Vou de Táxi">
           <h3>Fantasia Vou de Táxi</h3>
           <div class="price-pix">R$ 60,00</div>
           <div class="price-original">De R$ 78,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Jogo do Prazer Homem x Homem" data-price="13.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Jogo do Prazer Homem x Homem" data-price="10.00" onclick="showProductDescription(this)">
           <img src="https://www.adrenalinasexshop.com.br/wp-content/uploads/2018/09/dado-homem.jpg" alt="Jogo do Prazer">
           <h3>Jogo do Prazer Homem x Homem</h3>
           <div class="price-pix">R$ 10,00</div>
           <div class="price-original">De R$ 13,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
         <div class="product" data-name="Baralho Kama Sutra" data-price="32.50" onclick="showProductDescription(this)">
@@ -1754,23 +1810,23 @@
           <h3>Baralho Kama Sutra</h3>
           <div class="price-pix">R$ 25,00</div>
           <div class="price-original">De R$ 32,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Algemas Metal" data-price="45.50" onclick="showProductDescription(this)">
+        <div class="product" data-name="Algemas Metal" data-price="35.00" onclick="showProductDescription(this)">
           <img src="https://static.cdnlive.com.br/uploads/487/unidade/16964540694841_zoom.jpg" alt="Algemas Metal">
           <h3>Algemas Metal</h3>
           <div class="price-pix">R$ 35,00</div>
           <div class="price-original">De R$ 45,50</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
-        <div class="product" data-name="Fantasia Mini Xerife" data-price="39.00" onclick="showProductDescription(this)">
+        <div class="product" data-name="Fantasia Mini Xerife" data-price="30-.00" onclick="showProductDescription(this)">
           <img src="https://us-east-1-prod-treinta-assets-bucket.s3.amazonaws.com/rn_image_picker_lib_temp_5e13be6e-3221-41b8-ae79-ede83b4d87c1.jpg.jpeg" alt="Fantasia Mini Xerife">
           <h3>Fantasia Mini Xerife</h3>
           <div class="price-pix">R$ 30,00</div>
           <div class="price-original">De R$ 39,00</div>
-          <div class="promo-badge">30% OFF no PIX</div>
+          <div class="promo-badge">30% OFF</div>
           <button class="btn-comprar" onclick="showProductDescription(this)">Adicionar ao Carrinho</button>
         </div>
       </div>
@@ -1778,6 +1834,10 @@
       <div class="dots"></div>
     </div>
   </section>
+  <!-- ÍCONE FLUTUANTE DO WHATSAPP -->
+  <a href="https://wa.me/5581975070904" target="_blank" class="whatsapp-float" title="Fale conosco no WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
   <!-- ================== RODAPÉ ================== -->
   <footer>
@@ -1795,7 +1855,63 @@
     const cartItems = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
     const toast = document.getElementById('toast');
+    // Atualiza o ícone de login para mostrar o nome do usuário
+    function updateAuthUI() {
+      const authContainer = document.getElementById('auth-container');
+      if (!authContainer || !currentUser) return;
 
+      authContainer.innerHTML = '';
+
+      const iconCircle = document.createElement('div');
+      iconCircle.className = 'auth-icon-circle';
+      iconCircle.innerHTML = '<i class="fas fa-user"></i>';
+      authContainer.appendChild(iconCircle);
+
+      const primeiroNome = currentUser.nome.split(' ')[0];
+
+      const label = document.createElement('span');
+      label.className = 'auth-label';
+      label.textContent = primeiroNome;
+      authContainer.appendChild(label);
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'auth-dropdown';
+      dropdown.innerHTML = '<a href="#" onclick="logout(event)">Sair</a>';
+      authContainer.appendChild(dropdown);
+
+      authContainer.onclick = (e) => {
+        e.stopPropagation();
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      };
+
+      document.addEventListener('click', () => {
+        const d = authContainer.querySelector('.auth-dropdown');
+        if (d && d.style.display === 'block') {
+          d.style.display = 'none';
+        }
+      });
+
+      // Atualiza o menu mobile
+      const mobileSpan = document.getElementById('mobile-auth-label');
+        if (mobileSpan) {
+          mobileSpan.textContent = primeiroNome;
+        }
+
+      // Muda o onclick do mobile para "Sair"
+      const mobileItem = document.querySelector('.mobile-menu-item[onclick*="openAuthModal"]');
+        if (mobileItem) {
+          mobileItem.onclick = null; // Remove o antigo
+          mobileItem.setAttribute('onclick', 'logoutFromMobile(event); toggleMenu();');
+        }
+      }
+    // Função para sair da conta
+    function logout(event) {
+      event.preventDefault();
+      isLoggedIn = false;
+      currentUser = null;
+      showToast('Você saiu da conta.', 'success');
+      location.reload(); // Recarrega a página para voltar ao estado de login
+    }
     // ================== CARRINHO ==================
     function addToCart(button) {
       const product = button.closest('.product');
@@ -2120,6 +2236,7 @@
           currentUser = data.user;
           showToast('Login realizado com sucesso!', 'success');
           closeAuthModal();
+          updateAuthUI();
         }
       })
       .catch(err => {
@@ -2328,6 +2445,13 @@
       } else {
         searchBar.style.display = 'flex';
         searchInput.focus();
+      }
+    }
+    function handleMobileAuthClick() {
+      if (isLoggedIn) {
+        logout(event); // Sai da conta
+      } else {
+        openAuthModal(); // Abre login
       }
     }
   </script>
