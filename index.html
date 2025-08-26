@@ -1321,6 +1321,86 @@
     .auth-dropdown a:hover {
       background-color: #f5f5f5;
     }
+    .btn-entrega {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #5d3a5a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  
+    .address-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .address-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .address-content input, .address-content textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .btn-confirmar {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    /* === ANIMAÇÃO DE CARREGAMENTO === */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ccc;
+      border-top-color: #e91e63;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -1398,7 +1478,12 @@
       <form id="login-form" class="auth-form">
        <input type="email" placeholder="Email" required>
         <input type="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
+        <button type="submit" class="btn-auth">
+          Entrar
+          <span class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+          </span>
+        </button>
         <a href="#" style="font-size: 12px; color: #e91e63; text-align: center; margin-top: 10px;" 
            onclick="alert('Entre em contato pelo WhatsApp para recuperar sua senha.'); return false;">
           Esqueci a senha
@@ -1411,7 +1496,13 @@
         <input type="email" placeholder="Email" required>
         <input type="tel" placeholder="Telefone (opcional)">
         <input type="password" placeholder="Senha" required>
-        <button type="submit">Cadastrar</button>
+        <button type="submit" class="btn-auth">
+          Cadastrar
+          <span class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+          </span>
+        </span>
+        </button>
       </form>
     </div>
   </div>
@@ -1429,10 +1520,27 @@
       <div class="cart-footer">
         <div class="cart-total">Total: R$ <span id="cart-total">0,00</span></div>
         <input type="text" id="codigo-indicacao" class="contact-input" placeholder="Código de indicação (opcional)">
-        <label>
-          <input type="checkbox" id="entrega-sigilosa"> Entrega Sigilosa - Combinar entrega
-        </label>
-        <button class="btn-finalizar" onclick="handleCheckout()">Finalizar Compra</button>
+        <button type="button" class="btn-entrega" onclick="openAddressModal()">📦 Informar Endereço de Entrega</button>
+
+    <!-- Modal de Endereço -->
+    <div class="address-modal" id="address-modal" style="display: none;">
+      <div class="address-content">
+        <h3>Informe seu endereço</h3>
+        <button class="close-btn" onclick="closeAddressModal()">&times;</button>
+
+        <input type="text" id="cep-input" placeholder="CEP (00000-000)" maxlength="9">
+        <input type="text" id="rua-input" placeholder="Logradouro">
+        <input type="text" id="bairro-input" placeholder="Bairro">
+        <input type="text" id="cidade-input" placeholder="Cidade">
+        <input type="text" id="estado-input" placeholder="Estado">
+        <input type="text" id="numero-input" placeholder="Número">
+        <textarea id="complemento-input" placeholder="Complemento (opcional)"></textarea>
+
+        <p><strong>Frete:</strong> <span id="frete-valor">R$ 0,00</span></p>
+        <button class="btn-confirmar" onclick="confirmarEndereco()">Confirmar e Pagar</button>
+      </div>
+    </div>
+        <button class="btn-finalizar" onclick="openAddressModal()">Finalizar Compra</button>
       </div>
     </div>
   </div>
@@ -1931,40 +2039,78 @@
     }
 
     function updateCart() {
-      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      // Atualiza contador do carrinho
+      const cartCount = document.getElementById('cart-count');
+      if (cartCount) {
+        cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      }
+
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total'); // span do total
 
       if (cart.length === 0) {
-        cartItems.innerHTML = '<p style="color: #888; text-align: center;">Seu carrinho está vazio.</p>';
-        cartTotal.textContent = '0,00';
+       if (cartItems) {
+          cartItems.innerHTML = '<p style="color: #888; text-align: center;">Seu carrinho está vazio.</p>';
+        }
+        if (cartTotal) {
+          cartTotal.textContent = '0,00';
+        }
         return;
       }
 
-      cartItems.innerHTML = '';
-      let total = 0;
+      if (cartItems) {
+        cartItems.innerHTML = '';
+        let total = 0;
 
-      cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+        cart.forEach(item => {
+          const itemTotal = item.price * item.quantity;
+          total += itemTotal;
 
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-          <img src="${item.imgSrc}" alt="${item.name}">
-          <div class="cart-item-info">
-            <div>${item.name} x${item.quantity}</div>
-            <div class="cart-item-price">R$ ${itemTotal.toFixed(2).replace('.', ',')}</div>
-            <div class="quantity-control">
-              <button class="quantity-btn" onclick="decreaseQuantity('${item.name}')">−</button>
-              <span class="quantity-value">${item.quantity}</span>
-              <button class="quantity-btn" onclick="increaseQuantity('${item.name}')">+</button>
-              <button class="remove-btn" title="Remover" onclick="removeItem('${item.name}')">🗑️</button>
+          const cartItem = document.createElement('div');
+          cartItem.className = 'cart-item';
+          cartItem.innerHTML = `
+            <img src="${item.imgSrc}" alt="${item.name}">
+            <div class="cart-item-info">
+              <div>${item.name} x${item.quantity}</div>
+              <div class="cart-item-price">R$ ${itemTotal.toFixed(2).replace('.', ',')}</div>
+              <div class="quantity-control">
+                <button class="quantity-btn" onclick="decreaseQuantity('${item.name}')">−</button>
+                <span class="quantity-value">${item.quantity}</span>
+                <button class="quantity-btn" onclick="increaseQuantity('${item.name}')">+</button>
+                <button class="remove-btn" title="Remover" onclick="removeItem('${item.name}')">🗑️</button>
+              </div>
             </div>
-          </div>
-        `;
-        cartItems.appendChild(cartItem);
-      });
+          `;
+          cartItems.appendChild(cartItem);
+        });
 
-      cartTotal.textContent = total.toFixed(2).replace('.', ',');
+        // === ADICIONA O FRETE, SE O MODAL ESTIVER ABERTO E O FRETE JÁ CALCULADO ===
+        const freteTextElement = document.getElementById('frete-valor');
+        const freteText = freteTextElement ? freteTextElement.textContent : 'R$ 0,00';
+
+        if (freteText && freteText !== 'R$ 0,00') {
+          const freteValor = parseFloat(freteText.replace('R$', '').replace(',', '.'));
+          if (!isNaN(freteValor)) {
+            total += freteValor;
+          }
+        }
+
+        // Atualiza o total visual
+        if (cartTotal) {
+          const freteTextElement = document.getElementById('frete-valor');
+          const freteText = freteTextElement ? freteTextElement.textContent : 'R$ 0,00';
+
+          let totalDisplay = total.toFixed(2).replace('.', ',');
+
+          // Se o frete foi calculado, mostra "+ Frete: X"
+          if (freteText && freteText !== 'R$ 0,00') {
+            totalDisplay = `${totalDisplay} ( Frete: ${freteText})`;
+          }
+
+          cartTotal.textContent = totalDisplay;
+
+        }
+      }
     }
 
     function toggleCart() {
@@ -2453,6 +2599,147 @@
       } else {
         openAuthModal(); // Abre login
       }
+    }
+    // === MODAL DE ENDEREÇO ===
+    function openAddressModal() {
+      document.getElementById('address-modal').style.display = 'flex';
+    }
+    function closeAddressModal() {
+      document.getElementById('address-modal').style.display = 'none';
+    }
+
+    // === PREENCHER ENDEREÇO E CALCULAR FRETE AUTOMÁTICO ===
+    document.getElementById('cep-input').addEventListener('blur', function () {
+      const cep = this.value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(dados => {
+          if (dados.erro) throw new Error('CEP inválido');
+
+          document.getElementById('rua-input').value = dados.logradouro;
+          document.getElementById('bairro-input').value = dados.bairro;
+          document.getElementById('cidade-input').value = dados.localidade;
+          document.getElementById('estado-input').value = dados.uf;
+
+          // === CALCULAR FRETE POR CIDADE ===
+          const cidade = dados.localidade.toLowerCase();
+          const uf = dados.uf;
+          let frete = 0;
+
+          if (cidade.includes('jaboat') || cidade.includes('guararapes')) {
+            frete = 12.00; // Jaboatão
+          } else if (cidade.includes('recife')) {
+            frete = 25.00; // Recife
+          } else if (cidade.includes('olinda')) {
+            frete = 30.00;
+          } else if (cidade.includes('paulista')) {
+            frete = 35.00;
+          } else if (cidade.includes('cabo')) {
+            frete = 45.00;
+          } else if (cidade.includes('ipojuca')) {
+            frete = 60.00;
+          } else if (uf === 'PB') {
+            frete = 80.00; // Paraíba
+          } else {
+            frete = 50.00; // Outras cidades de PE
+          }
+            
+          document.getElementById('frete-valor').textContent = `R$ ${frete.toFixed(2).replace('.', ',')}`;
+          updateCart(); // Atualiza o total do carrinho
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Erro ao buscar CEP. Tente novamente.');
+        });
+    });
+
+    function confirmarEndereco() {
+      const rua = document.getElementById('rua-input').value.trim();
+      const numero = document.getElementById('numero-input').value.trim();
+
+      if (!rua || !numero) {
+        showToast('Preencha o logradouro e número.', 'error');
+        return;
+      }
+
+      // Pega o valor do frete direto do span
+      const freteText = document.getElementById('frete-valor').textContent;
+      const freteValor = parseFloat(freteText.replace('R$', '').replace(',', '.'));
+
+      if (isNaN(freteValor)) {
+        showToast('Erro no cálculo do frete.', 'error');
+        return;
+      }
+
+      closeAddressModal();
+
+      const itemsComFrete = [...cart];
+      itemsComFrete.push({
+        name: "Frete (Entrega)",
+        quantity: 1,
+        price: freteValor
+      });
+
+      // Garante que o usuário está logado
+      if (!currentUser || !currentUser.email) {
+        showToast('Faça login para finalizar a compra.', 'error');
+        openAuthModal();
+        return;
+      }
+
+      fetch('https://semcensura-loja.onrender.com/create_preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: itemsComFrete,
+          usuario: currentUser.email,
+          codigoIndicacao: document.getElementById('codigo-indicacao')?.value || 'sem código'
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.init_point) {
+          window.open(data.init_point, '_blank');
+        } else {
+          showToast('Erro ao gerar pagamento.', 'error');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        showToast('Erro ao processar pagamento.', 'error');
+      });
+    }
+      
+    document.addEventListener('DOMContentLoaded', function () {
+        updateCart(); // Atualiza ao carregar
+    });
+    // === MOSTRAR LOADING NOS BOTÕES DE LOGIN E CADASTRO ===
+    function showLoading(button) {
+      const text = button.querySelector('.btn-text') || button.firstChild;
+      const spinner = button.querySelector('.loading-spinner');
+
+      // Se não tem classe no texto, vamos envolver
+      if (!button.querySelector('.btn-text')) {
+        const textNode = text.textContent;
+        text.textContent = '';
+        const span = document.createElement('span');
+        span.className = 'btn-text';
+        span.textContent = textNode;
+        text.appendChild(span);
+        text.appendChild(spinner);
+      }
+
+      button.disabled = true;
+      button.querySelector('.btn-text').style.display = 'none';
+      spinner.style.display = 'inline-block';
+    }
+
+    function hideLoading(button) {
+      button.disabled = false;
+      button.querySelector('.btn-text').style.display = 'inline';
+      button.querySelector('.loading-spinner').style.display = 'none';
     }
   </script>
 </body>
