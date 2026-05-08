@@ -1565,7 +1565,7 @@
     <h2>Para Ela</h2>
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
-      <div class="product-carousel"></div>
+      <div class="product-carousel" id="carousel-paraela"></div>
         
       <button class="arrow right" onclick="scrollCarousel(this, 'right')">&#10095;</button>
       <div class="dots"></div>
@@ -1578,7 +1578,7 @@
     <h2>Para Ele</h2>
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
-      <div class="product-carousel"></div>
+      <div class="product-carousel" id="carousel-paraele"></div>
       <button class="arrow right" onclick="scrollCarousel(this, 'right')">&#10095;</button>
       <div class="dots"></div>
     </div>
@@ -1589,7 +1589,7 @@
     <h2>Acessórios & Jogos</h2>
     <div class="carousel-wrapper">
       <button class="arrow left" onclick="scrollCarousel(this, 'left')">&#10094;</button>
-      <div class="product-carousel"></div>
+      <div class="product-carousel" id="carousel-casal"></div>
       <button class="arrow right" onclick="scrollCarousel(this, 'right')">&#10095;</button>
       <div class="dots"></div>
     </div>
@@ -1670,9 +1670,9 @@
 
             // Cria o HTML do Card
             const card = document.createElement('div');
-            card.className = 'product-card';
+            card.className = 'product';
             card.innerHTML = `
-                <img src="${produto.imagem}" alt="${produto.nome}" class="product-image" onerror="this.src='https://via.placeholder.com/300?text=Sem+Imagem'">
+                <img src="${produto.imagem}" alt="${produto.nome}" onerror="this.src='https://via.placeholder.com/300?text=Sem+Imagem'">
                 <div class="product-info">
                     <h3 class="product-name">${produto.nome}</h3>
                     <p class="product-description">${produto.descricao || 'Descrição do produto aqui.'}</p>
