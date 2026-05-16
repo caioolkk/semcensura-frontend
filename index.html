@@ -1890,54 +1890,26 @@
     const modalPrice = document.getElementById('modal-price');
     let currentProductElement = null;
 
-    const descriptions = {
-      'Sugador Clitoriano': 'Estimulador clitoriano com sucção ajustável e vibração. Ideal para orgasmos intensos.',
-      'Orgastic': 'Suplemento afrodisíaco natural para aumento do desejo sexual feminino.',
-      'Desodorante Soft Love Skin Ice': 'Desodorante íntimo refrescante com fragrância suave. Mantém o pH balanceado.',
-      'Perfume Feminino Tutti Fruitt': 'Perfume doce e frutado, ideal para momentos íntimos. Notas de morango e pêssego.',
-      'Tu Xera Hidratante Virilha Beijável': 'Hidratante comestível para região íntima. Sabor doce e efeito aquecedor suave.',
-      'Vibrador Golfinho Toque Aveludado': 'Vibrador com toque aveludado e 7 modos de vibração. À prova d\'água e silencioso.',
-      'Vibrador Ponto G Duplo Motor 17cm': 'Vibrador com duplo motor: um para o ponto G e outro para o clitóris. Recarregável.',
-      'Sabonete Íntimo Aromatizado Uva e Babalou': 'Sabonete íntimo aromatizado com fragrância de uva. Limpeza suave e proteção.',
-      'Pênis Realístico com Ventosa': 'Pênis realístico feito em silicone macio, com ventosa para fixação segura.',
-      'Algemas Metal': 'Algemas de metal com chave. Ideais para sado e fetiches. Ajustáveis e seguras.',
-      'Anel Peniano Em Silicone': 'Anel peniano que ajuda a prolongar a ereção e retardar a ejaculação.',
-      'Anel Peniano com Vibro': 'Anel peniano com vibração ajustável para maior estimulação durante a relação.',
-      'Cinta Peniana com Regulagem': 'Cinta peniana ajustável para casais. Permite penetração vaginal ou anal com conforto.',
-      'Egg Masturbador Surfer': 'Egg masturbador com textura interna e vibração suave. Discreto e fácil de usar.',
-      'Egg Masturbador Brush': 'Egg com textura interna tipo escova. Ideal para sensação de fricção.',
-      'Egg Masturbador Spide': 'Egg com formato interno de espiral. Sensação intensa e diferenciada.',
-      'Egg Masturbador Stronger Shiny': 'Egg com vibração potente e acabamento brilhante. Recarregável.',
-      'Egg Masturbador Tube': 'Tubo masturbador com textura interna. Simula sensação realista.',
-      'Potencializador Masculino': 'Gel potencializador para aumento da sensibilidade e duração da ereção.',
-      'Fantasia Vou de Táxi': 'Fantasia sensual de motorista de táxi. Inclui blusa, saia e chapéu.',
-      'Gel Térmico 8ml': 'Gel térmico que aquece e esfria. Ideal para momentos a dois.',
-      'Jogo do Prazer Homem x Homem': 'Jogo erótico com cartas de desafios sensuais para casais.',
-      'Lubrificante Beijável Bubbalove Menta': 'Lubrificante comestível sabor menta refrescante. Hidratação prolongada.',
-      'Masturbador Cyberskin em Formato de Boca': 'Masturbador em formato de boca, feito em cyberskin macio e realista.',
-      'Masturbador Lanterna Funny Egg': 'Masturbador em formato de lanterna com egg vibratório interno.',
-      'Fantasia Mini Xerife': ' Kit Mini Fantasia Xerife Pimenta Sexy - Autoridade e Sedução em Um Só Look. Desperte sua autoridade e charme com o Kit Mini Fantasia Xerife Pimenta Sexy! Ideal para quem deseja apimentar a relação e viver momentos inesquecíveis de sedução e diversão. Detalhes do Produto: Tamanho Único: Veste do 36 ao 44, proporcionando um ajuste confortável e versátil para diferentes tipos de corpo.',
-      'Bullet Mini Cápsula': 'Vibrador discreto em formato de cápsula. Ideal para estimulação clitoriana.',
-      'Baralho Kama Sutra': 'Baralho com 60 cartas de posições sexuais e desafios eróticos.',
-      'Bolinhas Tailandesas': 'Bolinhas ninjas para estimulação do ponto G. Série de esferas conectadas.',
-      'Cinta P/2 Proteção DP Invertida La Pimienta': 'Cinta dupla para casais com proteção DP invertida. Segura e confortável.',
-      'Plug Anal G': 'Plug anal em silicone macio, tamanho grande. Ideal para experiências avançadas.',
-      'Plug Anal M': 'Plug anal médio em silicone. Design anatômico e seguro.',
-      'Plug Anal PP': 'Plug anal pequeno, ideal para iniciantes. Fácil de usar e remover.',
-      'Plug Anal P': 'Plug anal pequeno em silicone macio. Perfeito para uso diário.',
-      'Plug Anal Médio': 'Plug anal em tamanho médio, com base segura e acabamento liso.'
 
-    };
 
     function showProductDescription(productElement) {
+
       const name = productElement.getAttribute('data-name');
       const price = productElement.getAttribute('data-price');
+      const description = productElement.getAttribute('data-description');
       const imgSrc = productElement.querySelector('img').src;
 
       modalImg.src = imgSrc;
       modalTitle.textContent = name;
-      modalDesc.textContent = descriptions[name] || 'Produto sensual de alta qualidade.';
-      modalPrice.textContent = `R$ ${parseFloat(price).toFixed(2).replace('.', ',')}`;
+
+      modalDesc.textContent =
+        description && description.trim() !== ''
+          ? description
+          : 'Produto sensual de alta qualidade.';
+
+      modalPrice.textContent =
+        `R$ ${parseFloat(price).toFixed(2).replace('.', ',')}`;
+
       currentProductElement = productElement;
 
       productModal.style.display = 'flex';
@@ -2349,7 +2321,13 @@
       container.innerHTML = '';
       lista.forEach(p => {
         container.innerHTML += `
-          <div class="product" data-name="${p.nome}" data-price="${p.preco}" onclick="showProductDescription(this)">
+          <div 
+            class="product" 
+            data-name="${p.nome}" 
+            data-price="${p.preco}"
+            data-description="${p.descricao || ''}"
+            onclick="showProductDescription(this)"
+          >
             <img src="${p.imagem}" alt="${p.nome}">
             <h3>${p.nome}</h3>
             <div class="price-pix">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
