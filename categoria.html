@@ -709,6 +709,56 @@
             z-index: 9999999;
         }
 
+        /* ADD CART BUTTON */
+
+        .add-cart-button {
+
+            width: 100%;
+
+            height: 58px;
+
+            border: none;
+
+            border-radius: 18px;
+
+            background: var(--primary);
+
+            color: white;
+
+            font-size: 1rem;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+            cursor: pointer;
+
+            font-family: Poppins, sans-serif;
+
+            transition: .3s;
+        }
+
+        .add-cart-button:hover {
+
+            transform: translateY(-2px);
+        }
+
+        /* MODAL */
+
+        .product-modal-content {
+
+            max-height: 85vh;
+
+            overflow-y: auto;
+
+            padding-bottom: 120px;
+        }
+
         .toast.show {
 
             opacity: 1;
@@ -780,16 +830,28 @@
     </div>
 
     <script>
-        let cart = [];
+        let cart =
+            JSON.parse(
+                localStorage.getItem('cart')
+            ) || [];
         let currentProducts = [];
+        let selectedProduct = null;
         const API_BASE =
             'https://semcensura-loja.onrender.com';
 
-        const params =
-            new URLSearchParams(window.location.search);
 
-        const categoria =
-            params.get('categoria');
+        const params = new URLSearchParams(window.location.search);
+
+        const categoria = params.get('categoria');
+
+        const categoriaMap = {
+            paraela: 'paraela',
+            paraele: 'paraele',
+            paracasal: 'casal'
+        };
+
+        const categoriaFinal =
+            categoriaMap[categoria];
 
         document.getElementById(
             'category-title'
@@ -842,7 +904,7 @@
 class="product-card"
 onclick="openProductModalByIndex(${index})"
 >
-selectedProduct = product;
+
 <div class="product-image">
 
 <img src="${product.imagem}">
@@ -954,6 +1016,8 @@ R$ ${Number(product.preco)
 
         function openProductModal(product) {
 
+            selectedProduct = product;
+
             const modal =
                 document.getElementById(
                     'product-modal'
@@ -966,39 +1030,39 @@ R$ ${Number(product.preco)
 
             content.innerHTML = `
 
-<img
-src="${product.imagem}"
-class="modal-product-image"
->
+            <img
+            src="${product.imagem}"
+            class="modal-product-image"
+            >
 
-<h2 class="modal-product-title">
-${product.nome}
-</h2>
+            <h2 class="modal-product-title">
+            ${product.nome}
+            </h2>
 
-<p class="modal-product-description">
-${product.descricao || 'Produto premium.'}
-</p>
+            <p class="modal-product-description">
+            ${product.descricao || 'Produto premium.'}
+            </p>
 
-<div class="modal-product-price">
+            <div class="modal-product-price">
 
-R$ ${Number(product.preco)
+            R$ ${Number(product.preco)
                     .toFixed(2)
                     .replace('.', ',')}
 
-</div>
+            </div>
 
-<button
-class="checkout-button"
-onclick="addCurrentProductToCart()"
->
+            <button
+            class="add-cart-button"
+            onclick="addCurrentProductToCart()"
+            >
 
-<i class="fa-solid fa-cart-shopping"></i>
+            <i class="fa-solid fa-cart-shopping"></i>
 
-Adicionar ao Carrinho
+            Adicionar ao Carrinho
 
-</button>
+            </button>
 
-`;
+            `;
 
             modal.style.display = 'block';
         }
@@ -1070,7 +1134,11 @@ Adicionar ao Carrinho
 
             }
 
+            saveCart();
+
             updateCart();
+
+            updateCartCount();
 
             showToast(
                 'Produto adicionado'
@@ -1078,6 +1146,22 @@ Adicionar ao Carrinho
 
         }
 
+        function saveCart() {
+
+            localStorage.setItem(
+                'cart',
+                JSON.stringify(cart)
+            );
+
+        }
+        function saveCart() {
+
+            localStorage.setItem(
+                'cart',
+                JSON.stringify(cart)
+            );
+
+        }
         // =====================================
         // UPDATE CART
         // =====================================
@@ -1172,7 +1256,6 @@ onclick="increaseQuantity('${item._id}')"
         // =====================================
         // INCREASE
         // =====================================
-
         function increaseQuantity(id) {
 
             const item =
@@ -1182,7 +1265,11 @@ onclick="increaseQuantity('${item._id}')"
 
                 item.quantidade++;
 
+                saveCart();
+
                 updateCart();
+
+                updateCartCount();
 
             }
 
@@ -1209,8 +1296,11 @@ onclick="increaseQuantity('${item._id}')"
                     );
 
             }
+            saveCart();
 
             updateCart();
+
+            updateCartCount();
 
         }
 
@@ -1279,8 +1369,39 @@ R$ ${total
             }, 2500);
 
         }
-        carregarProdutos();
+        function updateCartCount() {
 
+            const count =
+                cart.reduce(
+                    (total, item) =>
+                        total + item.quantidade,
+                    0
+                );
+
+            const badge =
+                document.getElementById('cart-count');
+
+            if (badge) {
+
+                badge.innerText = count;
+
+                badge.style.display =
+                    count > 0 ? 'flex' : 'none';
+            }
+        }
+        window.onload = () => {
+
+            cart =
+                JSON.parse(
+                    localStorage.getItem('cart')
+                ) || [];
+
+            updateCart();
+
+            updateCartCount();
+
+            carregarProdutos();
+        };
     </script>
     <!-- PRODUCT MODAL -->
 
@@ -1319,9 +1440,29 @@ R$ ${total
 
         </a>
 
-        <button onclick="toggleCart()">
+        <button onclick="toggleCart()" class="cart-button">
 
-            <i class="fa-solid fa-bag-shopping"></i>
+            <div style="position:relative;">
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                <span id="cart-count" style="
+            position:absolute;
+            top:-8px;
+            right:-10px;
+            background:#ff2e88;
+            color:white;
+            width:18px;
+            height:18px;
+            border-radius:50%;
+            font-size:.7rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+        ">0</span>
+
+            </div>
 
             <span>Carrinho</span>
 

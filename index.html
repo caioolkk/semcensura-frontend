@@ -213,15 +213,6 @@
       transform: translateY(-2px);
     }
 
-    .cart-button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--card);
-      color: white;
-      position: relative;
-      border: 1px solid var(--border);
-    }
 
     .cart-count {
       position: absolute;
@@ -967,6 +958,29 @@
       font-size: .92rem;
     }
 
+    .mobile-bottom-nav .cart-button {
+
+      background: transparent !important;
+
+      border: none !important;
+
+      width: auto !important;
+      height: auto !important;
+
+      border-radius: 0 !important;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      gap: 4px;
+
+      color: #bbb;
+
+      box-shadow: none !important;
+
+    }
+
     /* ===================================== */
     /* MOBILE CATEGORIES */
     /* ===================================== */
@@ -1363,7 +1377,7 @@
 
         <button class="cart-button" onclick="toggleCart()">
           <i class="fa-solid fa-bag-shopping"></i>
-          <span class="cart-count" id="cart-count">0</span>
+          <span class="cart-count" id="cart-count-desktop">0</span>
         </button>
       </div>
 
@@ -1671,7 +1685,72 @@
     // ============================================
 
     let cart = [];
+    // ============================================
+    // SALVAR CARRINHO
+    // ============================================
 
+    function saveCart() {
+
+      localStorage.setItem('cart', JSON.stringify(cart))
+    
+
+    }
+
+    // ============================================
+    // CARREGAR CARRINHO
+    // ============================================
+
+    function loadCart() {
+
+      const saved =
+        localStorage.getItem('cart')
+      if (saved) {
+
+        cart = JSON.parse(saved);
+
+      } else {
+
+        cart = [];
+      }
+
+    }
+
+    // ============================================
+    // ATUALIZAR CONTADORES
+    // ============================================
+
+    function updateCartCount() {
+
+      const count = cart.reduce(
+        (total, item) => total + item.quantidade,
+        0
+      );
+
+      const desktop =
+        document.getElementById('cart-count-desktop');
+
+      const mobile =
+        document.getElementById('cart-count-mobile');
+
+      if (desktop) {
+
+        desktop.innerText = count;
+
+        desktop.style.display =
+          count > 0 ? 'flex' : 'none';
+
+      }
+
+      if (mobile) {
+
+        mobile.innerText = count;
+
+        mobile.style.display =
+          count > 0 ? 'flex' : 'none';
+
+      }
+
+    }
     // ============================================
     // TOGGLE CARRINHO
     // ============================================
@@ -1915,7 +1994,9 @@
         });
       }
 
+      saveCart();
       updateCart();
+      updateCartCount();
 
       showToast(
         'Produto adicionado ao carrinho'
@@ -1931,18 +2012,12 @@
       const cartItems =
         document.getElementById('cart-items');
 
-      const cartCount =
-        document.getElementById('cart-count');
+
 
       const cartTotal =
         document.getElementById('cart-total');
 
-      cartCount.innerText =
-        cart.reduce(
-          (acc, item) =>
-            acc + item.quantidade,
-          0
-        );
+      updateCartCount();
 
       if (cart.length === 0) {
 
@@ -2012,6 +2087,9 @@
         `R$ ${total
           .toFixed(2)
           .replace('.', ',')}`;
+
+      saveCart();
+      updateCartCount();
     }
 
     // ============================================
@@ -2027,7 +2105,9 @@
 
         item.quantidade++;
 
+        saveCart();
         updateCart();
+        updateCartCount();
       }
     }
 
@@ -2051,7 +2131,9 @@
         );
       }
 
+      saveCart();
       updateCart();
+      updateCartCount();
     }
 
     // ============================================
@@ -2395,7 +2477,9 @@ Adicionar ao Carrinho
     // ============================================
     // INICIALIZAR
     // ============================================
-
+    loadCart();
+    updateCart();
+    updateCartCount();
     carregarProdutos();
 
   </script>
@@ -2411,10 +2495,33 @@ Adicionar ao Carrinho
       <span>Buscar</span>
     </a>
 
-    <a href="#" onclick="toggleCart()">
-      <i class="fa-solid fa-cart-shopping"></i>
+    <button onclick="toggleCart()" class="cart-button">
+
+      <div style="position:relative;">
+
+        <i class="fa-solid fa-bag-shopping"></i>
+
+        <span id="cart-count-mobile" style="
+            position:absolute;
+            top:-8px;
+            right:-10px;
+            background:#ff2e88;
+            color:white;
+            width:18px;
+            height:18px;
+            border-radius:50%;
+            font-size:.7rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+        ">0</span>
+
+      </div>
+
       <span>Carrinho</span>
-    </a>
+
+    </button>
 
     <a href="https://wa.me/5581975070904" target="_blank">
       <i class="fab fa-whatsapp"></i>
