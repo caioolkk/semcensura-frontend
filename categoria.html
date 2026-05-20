@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Categoria | Sem Censura</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+
+            --bg: #0d0d0d;
+            --card: #161616;
+            --primary: #ff2e88;
+            --gold: #d4af37;
+            --text: #d1d1d1;
+            --border: rgba(255, 255, 255, .08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            background: var(--bg);
+            color: white;
+
+            font-family: Poppins, sans-serif;
+
+            padding-bottom: 100px;
+        }
+
+        .container {
+
+            max-width: 1300px;
+            margin: auto;
+
+            padding: 20px;
+        }
+
+        /* ===================================== */
+        /* TOP */
+        /* ===================================== */
+
+        .category-top {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 24px;
+
+            gap: 16px;
+        }
+
+        .category-title {
+
+            font-size: 2rem;
+        }
+
+        /* ===================================== */
+        /* SEARCH */
+        /* ===================================== */
+
+        .search-box {
+
+            height: 56px;
+
+            background: var(--card);
+
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 18px;
+
+            gap: 14px;
+
+            border: 1px solid var(--border);
+
+            margin-bottom: 18px;
+        }
+
+        .search-box input {
+
+            background: none;
+            border: none;
+            outline: none;
+
+            width: 100%;
+
+            color: white;
+
+            font-family: Poppins, sans-serif;
+
+            font-size: 1rem;
+        }
+
+        /* ===================================== */
+        /* FILTERS */
+        /* ===================================== */
+
+        .filters {
+
+            display: flex;
+            gap: 12px;
+
+            margin-bottom: 24px;
+
+            overflow-x: auto;
+        }
+
+        .filter-select {
+
+            height: 48px;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 0 14px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        /* ===================================== */
+        /* PRODUCTS */
+        /* ===================================== */
+
+        .products-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 18px;
+        }
+
+        .product-card {
+
+            background: var(--card);
+
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            cursor: pointer;
+
+            transition: .3s;
+
+            border: 1px solid var(--border);
+        }
+
+        .product-card:hover {
+
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+
+            height: 240px;
+
+            background: #111;
+        }
+
+        .product-image img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            padding: 14px;
+        }
+
+        .product-content {
+
+            padding: 16px;
+        }
+
+        .product-title {
+
+            font-size: .95rem;
+
+            margin-bottom: 12px;
+
+            min-height: 48px;
+        }
+
+        .price {
+
+            font-size: 1.3rem;
+            font-weight: 700;
+
+            color: var(--gold);
+        }
+
+        button,
+        a,
+        div {
+
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ===================================== */
+        /* BACK BUTTON */
+        /* ===================================== */
+
+        .back-button {
+
+            height: 48px;
+
+            padding: 0 18px;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            color: white;
+
+            font-weight: 600;
+
+            transition: .3s;
+        }
+
+        .back-button:hover {
+
+            background: var(--primary);
+
+            transform: translateY(-2px);
+        }
+
+        .back-button i {
+
+            font-size: .95rem;
+        }
+
+        /* ===================================== */
+        /* MOBILE */
+        /* ===================================== */
+
+        @media(max-width:768px) {
+
+            .products-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .product-image {
+                height: 180px;
+            }
+
+            .category-title {
+                font-size: 1.5rem;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="category-top">
+
+            <a href="index.html" class="back-button">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Voltar
+
+            </a>
+
+            <h1 class="category-title" id="category-title">
+                Categoria
+            </h1>
+
+        </div>
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input type="text" placeholder="Pesquisar produto..." id="search-input">
+
+        </div>
+
+        <!-- FILTERS -->
+
+        <div class="filters">
+
+            <select class="filter-select" id="price-filter">
+
+                <option value="">
+                    Preço
+                </option>
+
+                <option value="0-50">
+                    Até R$50
+                </option>
+
+                <option value="50-100">
+                    R$50 - R$100
+                </option>
+
+                <option value="100-9999">
+                    Acima de R$100
+                </option>
+
+            </select>
+
+
+        </div>
+
+        <!-- PRODUCTS -->
+
+        <div class="products-grid" id="products-grid"></div>
+
+    </div>
+
+    <script>
+
+        const API_BASE =
+            'https://semcensura-loja.onrender.com';
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+        const categoria =
+            params.get('categoria');
+
+        document.getElementById(
+            'category-title'
+        ).innerText = categoria;
+
+        let produtos = [];
+
+        async function carregarProdutos() {
+
+            const response =
+                await fetch(
+                    `${API_BASE}/api/produtos`
+                );
+
+            const data =
+                await response.json();
+
+            produtos =
+                data.filter(p =>
+
+                    p.categoria?.toLowerCase()
+                    === categoria?.toLowerCase()
+
+                );
+
+            renderProdutos(produtos);
+
+        }
+
+        function renderProdutos(lista) {
+
+            const grid =
+                document.getElementById(
+                    'products-grid'
+                );
+
+            grid.innerHTML = '';
+
+            lista.forEach(product => {
+
+                grid.innerHTML += `
+
+<div class="product-card">
+
+<div class="product-image">
+
+<img src="${product.imagem}">
+
+</div>
+
+<div class="product-content">
+
+<h3 class="product-title">
+${product.nome}
+</h3>
+
+<div class="price">
+
+R$ ${Number(product.preco)
+                        .toFixed(2)
+                        .replace('.', ',')}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+            });
+
+        }
+
+        // =====================================
+        // SEARCH
+        // =====================================
+
+        document
+            .getElementById('search-input')
+            .addEventListener(
+                'input',
+                function () {
+
+                    const termo =
+                        this.value.toLowerCase();
+
+                    const filtrados =
+                        produtos.filter(p =>
+
+                            p.nome
+                                .toLowerCase()
+                                .includes(termo)
+
+                        );
+
+                    renderProdutos(filtrados);
+
+                }
+            );
+
+        // =====================================
+        // FILTER PRICE
+        // =====================================
+
+        document
+            .getElementById('price-filter')
+            .addEventListener(
+                'change',
+                applyFilters
+            );
+
+
+        function applyFilters() {
+
+            const price =
+                document.getElementById(
+                    'price-filter'
+                ).value;
+
+            let filtrados = [...produtos];
+
+            if (price) {
+
+                const [min, max] =
+                    price.split('-').map(Number);
+
+                filtrados =
+                    filtrados.filter(p =>
+
+                        p.preco >= min &&
+                        p.preco <= max
+
+                    );
+
+            }
+
+            renderProdutos(filtrados);
+
+        }
+
+        carregarProdutos();
+
+    </script>
+
+</body>
+
+</html>
