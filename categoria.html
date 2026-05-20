@@ -491,7 +491,7 @@
     </div>
 
     <script>
-
+        let cart = [];
         const API_BASE =
             'https://semcensura-loja.onrender.com';
 
@@ -704,7 +704,260 @@ Adicionar ao Carrinho
                 'product-modal'
             ).style.display = 'none';
         }
+        // =====================================
+        // TOGGLE CART
+        // =====================================
 
+        function toggleCart() {
+
+            const overlay =
+                document.getElementById(
+                    'cart-overlay'
+                );
+
+            if (
+                overlay.style.display === 'block'
+            ) {
+
+                overlay.classList.remove('active');
+
+                setTimeout(() => {
+
+                    overlay.style.display = 'none';
+
+                }, 300);
+
+            } else {
+
+                overlay.style.display = 'block';
+
+                setTimeout(() => {
+
+                    overlay.classList.add('active');
+
+                }, 10);
+
+            }
+
+        }
+
+        // =====================================
+        // ADD CART
+        // =====================================
+
+        function addToCart(product) {
+
+            const existing =
+                cart.find(item =>
+                    item._id === product._id
+                );
+
+            if (existing) {
+
+                existing.quantidade++;
+
+            } else {
+
+                cart.push({
+                    ...product,
+                    quantidade: 1
+                });
+
+            }
+
+            updateCart();
+
+            showToast(
+                'Produto adicionado'
+            );
+
+        }
+
+        // =====================================
+        // UPDATE CART
+        // =====================================
+
+        function updateCart() {
+
+            const cartItems =
+                document.getElementById(
+                    'cart-items'
+                );
+
+            const cartTotal =
+                document.getElementById(
+                    'cart-total'
+                );
+
+            if (cart.length === 0) {
+
+                cartItems.innerHTML = `
+<p style="color:#999">
+Seu carrinho está vazio.
+</p>
+`;
+
+                cartTotal.innerText =
+                    'R$ 0,00';
+
+                return;
+            }
+
+            let total = 0;
+
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+
+                total +=
+                    item.preco * item.quantidade;
+
+                cartItems.innerHTML += `
+
+<div class="cart-item">
+
+<img src="${item.imagem}">
+
+<div class="cart-info">
+
+<h4>${item.nome}</h4>
+
+<p>
+
+R$ ${(item.preco * item.quantidade)
+                        .toFixed(2)
+                        .replace('.', ',')}
+
+</p>
+
+<div class="quantity">
+
+<button
+onclick="decreaseQuantity('${item._id}')"
+>
+-
+</button>
+
+<span>${item.quantidade}</span>
+
+<button
+onclick="increaseQuantity('${item._id}')"
+>
++
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+            });
+
+            cartTotal.innerText =
+
+                `R$ ${total
+                    .toFixed(2)
+                    .replace('.', ',')}`;
+
+        }
+
+        // =====================================
+        // INCREASE
+        // =====================================
+
+        function increaseQuantity(id) {
+
+            const item =
+                cart.find(i => i._id === id);
+
+            if (item) {
+
+                item.quantidade++;
+
+                updateCart();
+
+            }
+
+        }
+
+        // =====================================
+        // DECREASE
+        // =====================================
+
+        function decreaseQuantity(id) {
+
+            const item =
+                cart.find(i => i._id === id);
+
+            if (!item) return;
+
+            item.quantidade--;
+
+            if (item.quantidade <= 0) {
+
+                cart =
+                    cart.filter(
+                        i => i._id !== id
+                    );
+
+            }
+
+            updateCart();
+
+        }
+
+        // =====================================
+        // CHECKOUT
+        // =====================================
+
+        function checkoutWhatsApp() {
+
+            if (cart.length === 0) {
+
+                return;
+
+            }
+
+            let message =
+                '🛍️ *NOVO PEDIDO*%0A%0A';
+
+            let total = 0;
+
+            cart.forEach(item => {
+
+                const subtotal =
+                    item.preco * item.quantidade;
+
+                total += subtotal;
+
+                message +=
+
+                    `• ${item.nome} x${item.quantidade}
+= R$ ${subtotal
+                        .toFixed(2)
+                        .replace('.', ',')}%0A`;
+
+            });
+
+            message +=
+
+                `%0A💰 Total:
+R$ ${total
+                    .toFixed(2)
+                    .replace('.', ',')}`;
+
+            window.open(
+
+                `https://wa.me/5581975070904?text=${message}`,
+
+                '_blank'
+
+            );
+
+        }
         carregarProdutos();
 
     </script>
@@ -760,6 +1013,57 @@ Adicionar ao Carrinho
             <span>Whats</span>
 
         </a>
+
+    </div>
+    <!-- CART -->
+
+    <div class="cart-overlay" id="cart-overlay">
+
+        <div class="cart-sidebar">
+
+            <div class="cart-header">
+
+                <h3>Seu Carrinho</h3>
+
+                <button class="close-cart" onclick="toggleCart()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+            <div class="cart-items" id="cart-items">
+
+                <p style="color:#999">
+                    Seu carrinho está vazio.
+                </p>
+
+            </div>
+
+            <div class="cart-footer">
+
+                <div class="cart-total">
+
+                    <span>Total</span>
+
+                    <span id="cart-total">
+                        R$ 0,00
+                    </span>
+
+                </div>
+
+                <button class="checkout-button" onclick="checkoutWhatsApp()">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                    Finalizar no WhatsApp
+
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 </body>
