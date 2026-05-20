@@ -72,6 +72,147 @@
         }
 
         /* ===================================== */
+        /* PRODUCT MODAL */
+        /* ===================================== */
+
+        .product-modal {
+
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, .7);
+
+            display: none;
+
+            z-index: 999999;
+
+            padding: 20px;
+        }
+
+        .product-modal-content {
+
+            background: #161616;
+
+            border-radius: 30px;
+
+            padding: 20px;
+
+            max-width: 500px;
+
+            margin: auto;
+
+            margin-top: 40px;
+
+            position: relative;
+        }
+
+        .modal-product-image {
+
+            width: 100%;
+
+            height: 320px;
+
+            object-fit: contain;
+
+            background: #111;
+
+            border-radius: 20px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-product-title {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 12px;
+        }
+
+        .modal-product-description {
+
+            color: #bbb;
+
+            line-height: 1.7;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-product-price {
+
+            font-size: 1.7rem;
+
+            font-weight: 700;
+
+            color: var(--gold);
+
+            margin-bottom: 20px;
+        }
+
+        /* ===================================== */
+        /* MOBILE NAV */
+        /* ===================================== */
+
+        .mobile-nav {
+
+            position: fixed;
+
+            bottom: 0;
+            left: 0;
+
+            width: 100%;
+            height: 72px;
+
+            background: #111;
+
+            border-top:
+                1px solid var(--border);
+
+            display: flex;
+
+            justify-content: space-around;
+            align-items: center;
+
+            z-index: 999999;
+        }
+
+        .mobile-nav a,
+        .mobile-nav button {
+
+            background: none;
+            border: none;
+
+            color: #aaa;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 4px;
+
+            font-size: .75rem;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            font-family: Poppins, sans-serif;
+        }
+
+        .mobile-nav i {
+
+            font-size: 1.2rem;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav button:hover {
+
+            color: var(--primary);
+        }
+
+        /* ===================================== */
         /* SEARCH */
         /* ===================================== */
 
@@ -401,7 +542,10 @@
 
                 grid.innerHTML += `
 
-<div class="product-card">
+<div
+class="product-card"
+onclick='openProductModal(${JSON.stringify(product)})'
+>
 
 <div class="product-image">
 
@@ -499,11 +643,125 @@ R$ ${Number(product.preco)
             renderProdutos(filtrados);
 
         }
+        // =====================================
+        // PRODUCT MODAL
+        // =====================================
+
+        function openProductModal(product) {
+
+            const modal =
+                document.getElementById(
+                    'product-modal'
+                );
+
+            const content =
+                document.getElementById(
+                    'product-modal-content'
+                );
+
+            content.innerHTML = `
+
+<img
+src="${product.imagem}"
+class="modal-product-image"
+>
+
+<h2 class="modal-product-title">
+${product.nome}
+</h2>
+
+<p class="modal-product-description">
+${product.descricao || 'Produto premium.'}
+</p>
+
+<div class="modal-product-price">
+
+R$ ${Number(product.preco)
+                    .toFixed(2)
+                    .replace('.', ',')}
+
+</div>
+
+<button
+class="checkout-button"
+onclick='addToCart(${JSON.stringify(product)})'
+>
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+Adicionar ao Carrinho
+
+</button>
+
+`;
+
+            modal.style.display = 'block';
+        }
+
+        function closeProductModal() {
+
+            document.getElementById(
+                'product-modal'
+            ).style.display = 'none';
+        }
 
         carregarProdutos();
 
     </script>
+    <!-- PRODUCT MODAL -->
 
+    <div class="product-modal" id="product-modal">
+
+        <div class="product-modal-content">
+
+            <button class="close-cart" onclick="closeProductModal()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+            <div id="product-modal-content"></div>
+
+        </div>
+
+    </div>
+    <!-- MOBILE NAV -->
+
+    <div class="mobile-nav">
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Home</span>
+
+        </a>
+
+        <a href="#search-input">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <span>Pesquisa</span>
+
+        </a>
+
+        <button onclick="toggleCart()">
+
+            <i class="fa-solid fa-bag-shopping"></i>
+
+            <span>Carrinho</span>
+
+        </button>
+
+        <a href="https://wa.me/5581975070904" target="_blank">
+
+            <i class="fab fa-whatsapp"></i>
+
+            <span>Whats</span>
+
+        </a>
+
+    </div>
 </body>
 
 </html>
